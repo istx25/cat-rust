@@ -46,13 +46,13 @@ fn cat (args: Vec<String>, stdout: &mut io::Stdout) {
 
 fn redirect_stream<R, W>(reader: &mut R, writer: &mut W, buffer: &mut Vec<u8>) -> io::Result<()> where R: Read, W: Write {
     loop {
-        let len_read = try!(reader.read(buffer));
+        let len_read = reader.read(buffer)?;
 
         if 0 == len_read {
             return Ok(());
         }
 
-        try!(writer.write_all(&buffer[..len_read]));
+        writer.write_all(&buffer[..len_read])?;
 
         if len_read == buffer.len() && len_read < LARGE_BUFFER_SIZE {
             buffer.extend(iter::repeat(0).take(len_read));
